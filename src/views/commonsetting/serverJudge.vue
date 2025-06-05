@@ -49,10 +49,10 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="hostname" label="Hostname" width="180" />
-        <el-table-column prop="taskNum" label="Task Number" width="120" />
-        <el-table-column prop="cpuCore" label="CPU Core" width="100" />
-        <el-table-column prop="cpuUsage" label="CPU Usage" width="120" />
+        <el-table-column prop="hostname" label="Hostname" />
+        <el-table-column prop="taskNum" label="Task Number" />
+        <el-table-column prop="cpuCore" label="CPU Core" width="120" />
+        <el-table-column prop="cpuUsage" label="CPU Usage" width="160" />
         <el-table-column prop="memUsage" label="Memory Usage" width="140" />
         <el-table-column label="Disabled" width="100">
           <template #default="{ row }">
