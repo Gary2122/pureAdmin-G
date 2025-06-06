@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 24px; background: #fff">
     <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px">
-      问题列表
+      比赛问题列表
     </div>
     <div style="display: flex; justify-content: flex-end; margin-bottom: 16px">
       <el-input

@@ -31,6 +31,24 @@ export default {
       meta: {
         title: "创建比赛"
       }
+    },
+    {
+      path: "/exam/examDetail",
+      name: "ExamDetail",
+      component: () => import("@/views/exam/examDetail.vue"),
+      meta: {
+        title: "创建比赛",
+        showLink: false
+      }
+    },
+    {
+      path: "/exam/problemsList",
+      name: "problemsList",
+      component: () => import("@/views/exam/problemsList.vue"),
+      meta: {
+        title: "创建比赛",
+        showLink: false
+      }
     }
   ]
 } satisfies RouteConfigsTable;
