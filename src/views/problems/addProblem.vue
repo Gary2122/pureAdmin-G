@@ -1,292 +1,274 @@
 <template>
-  <div class="add-problem-container">
-    <el-form
-      :model="form"
-      :rules="rules"
-      ref="formRef"
-      label-width="100px"
-      class="problem-form"
-    >
-      <!-- 标题栏 -->
-      <div class="form-title">添加问题</div>
-      <!-- 基本信息 -->
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-form-item label="显示ID" prop="displayId" required>
-            <el-input
-              v-model="form.displayId"
-              type="textarea"
-              :autosize="{ minRows: 8, maxRows: 16 }"
-              placeholder="描述"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="18">
-          <el-form-item label="题目" prop="title" required>
-            <el-input
-              v-model="form.title"
-              type="textarea"
-              :autosize="{ minRows: 8, maxRows: 16 }"
-              placeholder="描述"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-divider />
-      <el-form-item label="描述" prop="description" required>
-        <el-input
-          v-model="form.description"
-          type="textarea"
-          :autosize="{ minRows: 8, maxRows: 16 }"
-          placeholder="描述"
-        />
-      </el-form-item>
-      <el-form-item label="输入描述" prop="inputDesc" required>
-        <el-input
-          v-model="form.inputDesc"
-          type="textarea"
-          :autosize="{ minRows: 8, maxRows: 16 }"
-          placeholder="描述"
-        />
-      </el-form-item>
-      <el-form-item label="输出描述" prop="outputDesc" required>
-        <el-input
-          v-model="form.outputDesc"
-          type="textarea"
-          :autosize="{ minRows: 8, maxRows: 16 }"
-          placeholder="描述"
-        />
-      </el-form-item>
-      <el-divider />
-      <!-- 限制与标签 -->
-      <el-row :gutter="20" class="row-limit">
-        <el-col :span="6">
-          <el-form-item label="时间限制(ms)" prop="timeLimit" required>
-            <el-input
-              v-model="form.timeLimit"
-              type="textarea"
-              :autosize="{ minRows: 8, maxRows: 16 }"
-              placeholder="描述"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="内存限制(MB)" prop="memoryLimit" required>
-            <el-input
-              v-model="form.memoryLimit"
-              type="textarea"
-              :autosize="{ minRows: 8, maxRows: 16 }"
-              placeholder="描述"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="难度" prop="difficulty" required>
-            <el-select
-              v-model="form.difficulty"
-              placeholder="选择难度"
-              style="width: 100%"
-            >
-              <el-option label="低" value="low" />
-              <el-option label="中" value="medium" />
-              <el-option label="高" value="high" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="row-tags">
-        <el-col :span="4">
-          <el-form-item label="是否可见">
-            <el-switch v-model="form.visible" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item label="分享提交">
-            <el-switch v-model="form.share" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="16">
-          <el-form-item label="标签" prop="tags" required>
-            <el-select
-              v-model="form.tags"
-              multiple
-              filterable
-              allow-create
-              default-first-option
-              placeholder="选择或输入标签"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="tag in tagOptions"
-                :key="tag"
-                :label="tag"
-                :value="tag"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-form-item label="可选编程语言" prop="languages" required>
-        <el-checkbox-group v-model="form.languages">
-          <el-checkbox label="C" />
-          <el-checkbox label="C++" />
-          <el-checkbox label="Java" />
-          <el-checkbox label="Python2" />
-          <el-checkbox label="Python3" />
-          <el-checkbox label="Golang" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-divider />
-      <!-- 样例 -->
-      <div class="sample-section">
-        <div
-          v-for="(sample, idx) in form.samples"
-          :key="idx"
-          class="sample-card-wrap"
-        >
-          <el-card class="sample-card">
-            <template #header>
-              <span class="sample-title">Sample{{ idx + 1 }}</span>
-              <el-button
-                v-if="form.samples.length > 1"
-                type="danger"
-                size="small"
-                @click="removeSample(idx)"
-                class="sample-delete-btn"
-                >删除</el-button
-              >
-            </template>
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <el-form-item
-                  :label="'输入样例'"
-                  :prop="'samples.' + idx + '.input'"
-                  required
-                >
-                  <el-input
-                    v-model="sample.input"
-                    type="textarea"
-                    :autosize="{ minRows: 8, maxRows: 16 }"
-                    placeholder="描述"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="'输出样例'"
-                  :prop="'samples.' + idx + '.output'"
-                  required
-                >
-                  <el-input
-                    v-model="sample.output"
-                    type="textarea"
-                    :autosize="{ minRows: 8, maxRows: 16 }"
-                    placeholder="描述"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-card>
-        </div>
-        <el-button type="primary" @click="addSample" class="add-sample-btn"
-          >添加样例</el-button
-        >
-      </div>
-      <el-divider />
-      <!-- 提示 -->
-      <el-form-item label="提示">
-        <el-input
-          v-model="form.hint"
-          type="textarea"
-          :autosize="{ minRows: 8, maxRows: 16 }"
-          placeholder="描述"
-        />
-      </el-form-item>
-      <el-divider />
-      <!-- 代码模板 -->
-      <div class="template-section">
-        <div class="template-title">代码模板</div>
-        <el-checkbox-group v-model="form.templates">
-          <el-checkbox label="C" />
-          <el-checkbox label="C++" />
-          <el-checkbox label="Java" />
-          <el-checkbox label="Python2" />
-          <el-checkbox label="Python3" />
-          <el-checkbox label="Golang" />
-        </el-checkbox-group>
-      </div>
-      <el-divider />
-      <!-- Special Judge -->
-      <div class="special-judge-section">
-        <el-checkbox v-model="form.specialJudge"
-          >使用 Special Judge</el-checkbox
-        >
-        <el-upload
-          v-if="form.specialJudge"
-          action="#"
-          :show-file-list="false"
-          :before-upload="beforeUpload"
-          class="special-judge-upload"
-        >
-          <el-button>选择文件</el-button>
-        </el-upload>
-      </div>
-      <el-divider />
-      <!-- 测试用例 -->
-      <div class="testcase-section">
+  <div>
+    <div class="add-problem-container">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="formRef"
+        label-width="100px"
+        class="problem-form"
+      >
+        <!-- 标题栏 -->
+        <div class="form-title">添加问题</div>
+        <!-- 基本信息 -->
         <el-row :gutter="20">
-          <el-col :span="4">
-            <el-form-item label="测试类型">
-              <el-radio-group v-model="form.testType">
-                <el-radio label="ACM">ACM</el-radio>
-                <el-radio label="OI">OI</el-radio>
-              </el-radio-group>
+          <el-col :span="6">
+            <el-form-item label="题目ID" prop="displayId" required>
+              <el-input v-model="form.displayId" placeholder="描述" />
             </el-form-item>
           </el-col>
-          <el-col :span="4">
-            <el-form-item label="IO类型">
-              <el-radio-group v-model="form.ioType">
-                <el-radio label="Standard IO">Standard IO</el-radio>
-                <el-radio label="File IO">File IO</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="测试用例">
-              <el-upload
-                action="#"
-                :show-file-list="false"
-                :before-upload="beforeUpload"
-                class="testcase-upload"
-              >
-                <el-button>选择文件</el-button>
-              </el-upload>
+          <el-col :span="18">
+            <el-form-item label="题目" prop="title" required>
+              <el-input v-model="form.title" placeholder="请输入题目标题" />
             </el-form-item>
           </el-col>
         </el-row>
-        <div class="testcase-table-wrap">
-          <el-table :data="[]" border style="width: 100%">
-            <el-table-column prop="input" label="输入" />
-            <el-table-column prop="output" label="输出" />
-            <el-table-column prop="score" label="分数" />
-            <el-table-column label="暂无数据">
-              <template #default>暂无数据</template>
-            </el-table-column>
-          </el-table>
+        <el-divider />
+        <el-form-item label="题目描述" prop="description" required>
+          <el-input
+            v-model="form.description"
+            type="textarea"
+            :autosize="{ minRows: 8, maxRows: 16 }"
+            placeholder="请输入题目描述"
+          />
+        </el-form-item>
+        <el-form-item label="输入描述" prop="inputDesc" required>
+          <el-input
+            v-model="form.inputDesc"
+            type="textarea"
+            :autosize="{ minRows: 8, maxRows: 16 }"
+            placeholder="请输入题目输入描述"
+          />
+        </el-form-item>
+        <el-form-item label="输出描述" prop="outputDesc" required>
+          <el-input
+            v-model="form.outputDesc"
+            type="textarea"
+            :autosize="{ minRows: 8, maxRows: 16 }"
+            placeholder="请输入题目输出描述"
+          />
+        </el-form-item>
+        <el-divider />
+        <!-- 限制与标签 -->
+        <el-row :gutter="20" class="row-limit">
+          <el-col :span="6">
+            <el-form-item label="时间限制(ms)" prop="timeLimit" required>
+              <el-input v-model="form.timeLimit" placeholder="题目时间限制" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="内存限制(MB)" prop="memoryLimit" required>
+              <el-input v-model="form.memoryLimit" placeholder="题目内存限制" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="难度" prop="difficulty" required>
+              <el-select
+                v-model="form.difficulty"
+                placeholder="选择难度"
+                style="width: 100%"
+              >
+                <el-option label="低" value="low" />
+                <el-option label="中" value="medium" />
+                <el-option label="高" value="high" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" class="row-tags">
+          <el-col :span="4">
+            <el-form-item label="是否可见">
+              <el-switch v-model="form.visible" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="分享提交">
+              <el-switch v-model="form.share" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="16">
+            <el-form-item label="标签" prop="tags" required>
+              <el-select
+                v-model="form.tags"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="选择或输入标签"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="tag in tagOptions"
+                  :key="tag"
+                  :label="tag"
+                  :value="tag"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="可选编程语言" prop="languages" required>
+          <el-checkbox-group v-model="form.languages">
+            <el-checkbox label="C" />
+            <el-checkbox label="C++" />
+            <el-checkbox label="Java" />
+            <el-checkbox label="Python2" />
+            <el-checkbox label="Python3" />
+            <el-checkbox label="Golang" />
+          </el-checkbox-group>
+        </el-form-item>
+        <el-divider />
+        <!-- 样例 -->
+        <div class="sample-section">
+          <div
+            v-for="(sample, idx) in form.samples"
+            :key="idx"
+            class="sample-card-wrap"
+          >
+            <el-card class="sample-card">
+              <template #header>
+                <span class="sample-title">Sample{{ idx + 1 }}</span>
+                <el-button
+                  v-if="form.samples.length > 1"
+                  type="danger"
+                  size="small"
+                  @click="removeSample(idx)"
+                  class="sample-delete-btn"
+                  >删除</el-button
+                >
+              </template>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item
+                    :label="'输入样例'"
+                    :prop="'samples.' + idx + '.input'"
+                    required
+                  >
+                    <el-input
+                      v-model="sample.input"
+                      type="textarea"
+                      :autosize="{ minRows: 8, maxRows: 16 }"
+                      placeholder="描述"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item
+                    :label="'输出样例'"
+                    :prop="'samples.' + idx + '.output'"
+                    required
+                  >
+                    <el-input
+                      v-model="sample.output"
+                      type="textarea"
+                      :autosize="{ minRows: 8, maxRows: 16 }"
+                      placeholder="描述"
+                    />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-card>
+          </div>
+          <el-button type="primary" @click="addSample" class="add-sample-btn"
+            >添加样例</el-button
+          >
         </div>
-      </div>
-      <el-divider />
-      <!-- 来源 -->
-      <el-form-item label="来源">
-        <el-input v-model="form.source" />
-      </el-form-item>
-      <!-- 保存按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="submit" class="save-btn"
-          >保存</el-button
-        >
-      </el-form-item>
-    </el-form>
+        <el-divider />
+        <!-- 提示 -->
+        <el-form-item label="提示">
+          <el-input
+            v-model="form.hint"
+            type="textarea"
+            :autosize="{ minRows: 8, maxRows: 16 }"
+            placeholder="描述"
+          />
+        </el-form-item>
+        <el-divider />
+        <!-- 代码模板 -->
+        <div class="template-section">
+          <div class="template-title">代码模板</div>
+          <el-checkbox-group v-model="form.templates">
+            <el-checkbox label="C" />
+            <el-checkbox label="C++" />
+            <el-checkbox label="Java" />
+            <el-checkbox label="Python2" />
+            <el-checkbox label="Python3" />
+            <el-checkbox label="Golang" />
+          </el-checkbox-group>
+        </div>
+        <el-divider />
+        <!-- Special Judge -->
+        <div class="special-judge-section">
+          <el-checkbox v-model="form.specialJudge"
+            >使用 Special Judge</el-checkbox
+          >
+          <el-upload
+            v-if="form.specialJudge"
+            action="#"
+            :show-file-list="false"
+            :before-upload="beforeUpload"
+            class="special-judge-upload"
+          >
+            <el-button>选择文件</el-button>
+          </el-upload>
+        </div>
+        <el-divider />
+        <!-- 测试用例 -->
+        <div class="testcase-section">
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <el-form-item label="测试类型">
+                <el-radio-group v-model="form.testType">
+                  <el-radio label="ACM">ACM</el-radio>
+                  <el-radio label="OI">OI</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="IO类型">
+                <el-radio-group v-model="form.ioType">
+                  <el-radio label="Standard IO">Standard IO</el-radio>
+                  <el-radio label="File IO">File IO</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="测试用例">
+                <el-upload
+                  action="#"
+                  :show-file-list="false"
+                  :before-upload="beforeUpload"
+                  class="testcase-upload"
+                >
+                  <el-button>选择文件</el-button>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div class="testcase-table-wrap">
+            <el-table :data="[]" border style="width: 100%">
+              <el-table-column prop="input" label="输入" />
+              <el-table-column prop="output" label="输出" />
+              <el-table-column prop="score" label="分数" />
+              <el-table-column label="暂无数据">
+                <template #default>暂无数据</template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+        <el-divider />
+        <!-- 来源 -->
+        <el-form-item label="来源">
+          <el-input v-model="form.source" />
+        </el-form-item>
+        <!-- 保存按钮 -->
+        <el-form-item>
+          <el-button type="primary" @click="submit" class="save-btn"
+            >保存</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -391,12 +373,14 @@ function submit() {
 </script>
 
 <style scoped>
+:deep(.el-form-item__label) {
+  width: 120px !important;
+}
 .add-problem-container {
   background: #fff;
   padding: 32px 24px 40px 24px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  max-width: 1300px;
   margin: 0 auto;
 }
 .problem-form {
